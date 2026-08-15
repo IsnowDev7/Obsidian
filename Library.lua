@@ -4858,7 +4858,6 @@ do
 
                 Risky = Info.Risky,
                 Disabled = Info.Disabled,
-                Visible = Info.Visible,
 
                 Tween = nil,
                 Type = "SubButton",
@@ -9507,7 +9506,7 @@ function Library:CreateWindow(WindowInfo)
             BackgroundTransparency = 1,
             Position = UDim2.fromOffset(0, 7),
             Size = UDim2.fromScale(1, 0),
-            Visible = false,
+            Visible = true,
             Parent = TabContainer,
         })
 
@@ -9841,10 +9840,9 @@ function Library:CreateWindow(WindowInfo)
                 TabRight,
             },
 
-            UserPanelBox = {
+            UserPanelState = {
                 IsNormal = true,
                 LockSize = false,
-                Visible = false,
                 Title = "",
                 Username = "",
                 UserIcon = nil,
@@ -9861,10 +9859,10 @@ function Library:CreateWindow(WindowInfo)
 
         -- Backwards-compatible state alias for scripts that only inspect the
         -- old warning table.  The public API is UserPanelBox.
-        Tab.WarningBox = Tab.UserPanelBox
+        Tab.WarningBox = Tab.UserPanelState
 
         function Tab:RefreshUserPanelTheme()
-            local State = Tab.UserPanelBox
+            local State = Tab.UserPanelState
             local IsNormal = State.IsNormal == true
             local PanelBackground = IsNormal and Library.Scheme.BackgroundColor or Color3.fromRGB(127, 0, 0)
             local PanelShadow = IsNormal and Library.Scheme.DarkColor or Color3.fromRGB(85, 0, 0)
@@ -9903,31 +9901,31 @@ function Library:CreateWindow(WindowInfo)
             end
 
             Library.Registry[WarningBox].BackgroundColor3 = function()
-                local Current = Tab.UserPanelBox.IsNormal == true
+                local Current = Tab.UserPanelState.IsNormal == true
                 return Current and Library.Scheme.BackgroundColor or Color3.fromRGB(127, 0, 0)
             end
             Library.Registry[WarningBoxShadowOutline].Color = function()
-                local Current = Tab.UserPanelBox.IsNormal == true
+                local Current = Tab.UserPanelState.IsNormal == true
                 return Current and Library.Scheme.DarkColor or Color3.fromRGB(85, 0, 0)
             end
             Library.Registry[WarningBoxOutline].Color = function()
-                local Current = Tab.UserPanelBox.IsNormal == true
+                local Current = Tab.UserPanelState.IsNormal == true
                 return Current and Library.Scheme.OutlineColor or Color3.fromRGB(255, 50, 50)
             end
             Library.Registry[WarningTitle].TextColor3 = function()
-                local Current = Tab.UserPanelBox.IsNormal == true
+                local Current = Tab.UserPanelState.IsNormal == true
                 return Current and Library.Scheme.FontColor or Color3.fromRGB(255, 50, 50)
             end
             Library.Registry[WarningStroke].Color = function()
-                local Current = Tab.UserPanelBox.IsNormal == true
+                local Current = Tab.UserPanelState.IsNormal == true
                 return Current and Library.Scheme.OutlineColor or Color3.fromRGB(169, 0, 0)
             end
             Library.Registry[UserPanelAvatar].BackgroundColor3 = function()
-                local Current = Tab.UserPanelBox.IsNormal == true
+                local Current = Tab.UserPanelState.IsNormal == true
                 return Current and Library.Scheme.MainColor or Color3.fromRGB(95, 0, 0)
             end
             Library.Registry[UserPanelAvatarStroke].Color = function()
-                local Current = Tab.UserPanelBox.IsNormal == true
+                local Current = Tab.UserPanelState.IsNormal == true
                 return Current and Library.Scheme.OutlineColor or Color3.fromRGB(255, 50, 50)
             end
 
@@ -9937,7 +9935,7 @@ function Library:CreateWindow(WindowInfo)
                         Library:AddToRegistry(Label, {})
                     end
                     Library.Registry[Label].TextColor3 = function()
-                        local Current = Tab.UserPanelBox.IsNormal == true
+                        local Current = Tab.UserPanelState.IsNormal == true
                         return Current and Library.Scheme.FontColor or Color3.fromRGB(255, 220, 220)
                     end
                 end
@@ -9955,7 +9953,7 @@ function Library:CreateWindow(WindowInfo)
 
         function Tab:Resize(ResizeUserPanelBox: boolean?)
             if ResizeUserPanelBox then
-                local CurrentState = Tab.UserPanelBox
+                local CurrentState = Tab.UserPanelState
                 local ContentHeight = UserPanelContentLayout.AbsoluteContentSize.Y
                 local HasAvatar = UserPanelAvatar.Visible
                 local MinimumHeight = HasAvatar and 82 or 42
@@ -9979,18 +9977,13 @@ function Library:CreateWindow(WindowInfo)
 
         function Tab:UserPanelBox(Info)
             Info = Info or {}
-            local State = Tab.UserPanelBox
+            local State = Tab.UserPanelState
 
             if typeof(Info.IsNormal) == "boolean" then
                 State.IsNormal = Info.IsNormal
             end
             if typeof(Info.LockSize) == "boolean" then
                 State.LockSize = Info.LockSize
-            end
-            if Info.Visible == nil then
-                State.Visible = true
-            elseif typeof(Info.Visible) == "boolean" then
-                State.Visible = Info.Visible
             end
             if Info.Title ~= nil then
                 State.Title = tostring(Info.Title)
@@ -10018,7 +10011,7 @@ function Library:CreateWindow(WindowInfo)
                 end
             end
 
-            WarningBoxHolder.Visible = State.Visible
+            WarningBoxHolder.Visible = true
             WarningTitle.Text = Greeting
             WarningText.Text = ""
             RenderUserPanelAvatar(State.UserIcon)
@@ -10042,12 +10035,8 @@ function Library:CreateWindow(WindowInfo)
             return self:UserPanelBox(Info)
         end
 
-        function Tab:HideUserPanelBox()
-            return self:UserPanelBox({ Visible = false })
-        end
-
         function Tab:GetUserPanelBox()
-            return Tab.UserPanelBox
+            return Tab.UserPanelState
         end
 
         -- Compatibility wrapper.  New code should call UserPanelBox instead.
@@ -10056,7 +10045,6 @@ function Library:CreateWindow(WindowInfo)
             return self:UserPanelBox({
                 IsNormal = Info.IsNormal,
                 LockSize = Info.LockSize,
-                Visible = Info.Visible,
                 Title = Info.Title or "WARNING",
                 Information = Info.Information or Info.Text,
                 Username = Info.Username,

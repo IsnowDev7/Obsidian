@@ -56,9 +56,6 @@ InfoTab:UpdateUserPanelBox({
     },
 })
 
--- Hide or show the panel when needed.
--- InfoTab:HideUserPanelBox()
--- InfoTab:UserPanelBox({ Visible = true })
 ```
 
-`UserIcon` accepts `true` for the local player, a `Player` instance, a numeric user ID, or an image/asset string. `Username` accepts `true` for the local username, a `Player` instance, or a custom string. `Information` accepts strings, `{ Label = "...", Value = "..." }` rows, or keyed data tables. The panel keeps the existing warning-box sizing and theme registry behavior for compatibility with the library’s tab layout.
+`UserIcon` accepts `true` for the local player, a `Player` instance, a numeric user ID, or an image/asset string. `Username` accepts `true` for the local username, a `Player` instance, or a custom string. `Information` accepts strings, `{ Label = "...", Value = "..." }` rows, or keyed data tables. The panel is a normal always-present opaque tab panel and keeps the existing warning-box sizing and theme registry behavior for compatibility with the library’s tab layout.
