@@ -46,15 +46,37 @@ local Tabs = {
 
 
 --[[
-Example of how to add a warning box to a tab; the title AND text support rich text formatting.
+UserPanelBox example.
+The same panel can show a Roblox avatar, the current username, and any number
+of custom information rows for game state, server data, or status messages.
 
-local UISettingsTab = Tabs["UI Settings"]
+local InfoTab = Tabs.Main
 
-UISettingsTab:UpdateWarningBox({
-	Visible = true,
-	Title = "Warning",
-	Text = "This is a warning box!",
+InfoTab:UserPanelBox({
+	Title = "Good Afternoon",
+	UserIcon = true, -- local Roblox headshot; also accepts a Player, user ID, or asset URL
+	Username = true, -- local username; also accepts a custom string or Player
+	Information = {
+		"Executor: Delta",
+		{ Label = "Map", Value = "Prison Life" },
+		{ Label = "Players", Value = "12 / 24" },
+		{ Label = "Ping", Value = "48 ms" },
+		{ Label = "Status", Value = "Loaded" },
+	},
 })
+
+-- Update the panel later without rebuilding the tab.
+InfoTab:UpdateUserPanelBox({
+	Information = {
+		{ Label = "Map", Value = "Jailbreak" },
+		{ Label = "Cash", Value = "$42,000" },
+		{ Label = "Server", Value = game.JobId },
+	},
+})
+
+-- Hide it and show it again when needed.
+-- InfoTab:HideUserPanelBox()
+-- InfoTab:UserPanelBox({ Visible = true })
 
 --]]
 
